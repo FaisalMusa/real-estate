@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ra'ees Properties | Premium Real Estate in Maitama, Abuja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --deep-blue: #1e3a8a;
+            --earth-brown: #8b4513;
+            --forest-green: #228b22;
+            --cream: #f5f5dc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(rgba(30, 58, 138, 0.85), rgba(212, 175, 55, 0.85)), 
+                        url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .property-card {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-bottom-color: var(--primary-gold);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+        }
+        
+        .for-sale {
+            background: linear-gradient(135deg, #228b22, #32cd32);
+        }
+        
+        .for-rent {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+        }
+        
+        .sold {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        
+        .featured {
+            background: linear-gradient(135deg, #d4af37, #fbbf24);
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .image-gallery img:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .virtual-tour {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .virtual-tour::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+            z-index: 1;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .filter-btn.active {
+            background-color: var(--deep-blue);
+            color: white;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .mortgage-calculator {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .map-marker {
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <a href="#" 
+           target="_blank" 
+           class="flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full shadow-xl hover:bg-green-600 transition pulse-animation">
+            <i class="fab fa-whatsapp text-2xl"></i>
+        </a>
+    </div>
+
+    <!-- Property Inquiry Modal -->
+    <div id="inquiry-modal" class="fixed inset-0 z-50 hidden bg-black/50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
+                <div class="relative">
+                    <button id="close-inquiry" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-10">
+                        &times;
+                    </button>
+                    
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-deep-blue mb-2" id="modal-property-title">Inquire About Property</h3>
+                        <p class="text-gray-600 mb-6">Fill this form and our agent will contact you within 24 hours</p>
+                        
+                        <form id="inquiry-form" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Full Name</label>
+                                    <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Phone</label>
+                                    <input type="tel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2">Property Interest</label>
+                                <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Select Interest</option>
+                                    <option value="buy">I want to buy</option>
+                                    <option value="rent">I want to rent</option>
+                                    <option value="viewing">Schedule viewing</option>
+                                    <option value="valuation">Property valuation</option>
+                                    <option value="mortgage">Mortgage inquiry</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2">Preferred Contact Time</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300">
+                                        <span class="ml-2">Morning (8AM-12PM)</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300">
+                                        <span class="ml-2">Afternoon (12PM-4PM)</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300">
+                                        <span class="ml-2">Evening (4PM-7PM)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2">Message</label>
+                                <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                          placeholder="Any specific questions about the property?"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-gold-600 hover:bg-gold-700 text-white font-semibold py-3 rounded-lg transition">
+                                Submit Inquiry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-deep-blue text-white py-2" style="background-color: #1e3a8a;">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-2 md:mb-0">
+                    <i class="fas fa-star mr-2 text-gold-400"></i>
+                    <span>🏆 Voted Best Real Estate Agency in Abuja - 2024</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-phone-alt mr-2"></i>
+                        <span>[PHONE: 0800-XXX-XXXX]</span>
+                    </div>
+                    <div class="hidden md:block">|</div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span>Mon-Sat: 8AM-6PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="sticky top-0 z-40 bg-white shadow-lg">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-deep-blue to-gold-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-home text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-deep-blue">Ra'ees Properties</div>
+                        <div class="text-xs text-gold-600 font-medium">Premium Real Estate Solutions</div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-deep-blue font-medium">Home</a>
+                    <a href="#properties" class="text-gray-700 hover:text-deep-blue font-medium">Properties</a>
+                    <a href="#services" class="text-gray-700 hover:text-deep-blue font-medium">Services</a>
+                    <a href="#agents" class="text-gray-700 hover:text-deep-blue font-medium">Our Agents</a>
+                    <a href="#about" class="text-gray-700 hover:text-deep-blue font-medium">About</a>
+                    <button id="list-property-btn" class="bg-gold-600 hover:bg-gold-700 text-white px-6 py-2 rounded-full font-semibold transition">
+                        List Your Property
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-toggle" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden fixed inset-0 bg-white z-50 pt-20 px-6">
+            <button id="close-mobile-menu" class="absolute top-6 right-6 text-2xl text-gray-700">
+                &times;
+            </button>
+            
+            <div class="space-y-6">
+                <a href="#home" class="block text-xl font-medium text-gray-700 py-2 border-b">Home</a>
+                <a href="#properties" class="block text-xl font-medium text-gray-700 py-2 border-b">Properties</a>
+                <a href="#services" class="block text-xl font-medium text-gray-700 py-2 border-b">Services</a>
+                <a href="#agents" class="block text-xl font-medium text-gray-700 py-2 border-b">Our Agents</a>
+                <a href="#about" class="block text-xl font-medium text-gray-700 py-2 border-b">About</a>
+                <button id="list-property-mobile" class="w-full bg-gold-600 text-white py-3 rounded-lg font-semibold">
+                    List Your Property
+                </button>
+                
+                <div class="pt-8 border-t">
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-deep-blue mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Call Us</div>
+                                <span class="text-gray-600">[PHONE: 0800-XXX-XXXX]</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-deep-blue mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Office</div>
+                                <div class="text-gray-600">Maitama District, Abuja</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg text-white">
+        <div class="container mx-auto px-6 py-20 md:py-32">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                    <span class="text-sm font-semibold">🔑 50+ Properties Sold This Year</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6 fade-in">
+                    Find Your <span class="text-gold-300">Dream Home</span> in Maitama
+                </h1>
+                
+                <p class="text-xl mb-10 opacity-90 fade-in" style="transition-delay: 0.2s;">
+                    Premium real estate services for buying, selling, and renting properties in Maitama, Abuja. 
+                    Trusted by families for 15+ years.
+                </p>
+                
+                <!-- Quick Search -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 fade-in" style="transition-delay: 0.4s;">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-white/80 mb-2">Type</label>
+                            <select class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white">
+                                <option value="">Any Type</option>
+                                <option value="house">House</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="land">Land</option>
+                                <option value="commercial">Commercial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white/80 mb-2">Location</label>
+                            <select class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white">
+                                <option value="">Any Area</option>
+                                <option value="gra">Maitama District</option>
+                                <option value="sabongari">Maitama Extension</option>
+                                <option value="tudunwada">Diplomatic Zone</option>
+                                <option value="market">Commercial Sector</option>
+                                <option value="hospital">Hospital Road Area</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white/80 mb-2">Price Range</label>
+                            <select class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white">
+                                <option value="">Any Price</option>
+                                <option value="5-10">₦5M - ₦10M</option>
+                                <option value="10-20">₦10M - ₦20M</option>
+                                <option value="20-50">₦20M - ₦50M</option>
+                                <option value="50+">₦50M+</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="w-full bg-gold-600 hover:bg-gold-700 text-white py-3 rounded-lg font-semibold transition">
+                                <i class="fas fa-search mr-2"></i> Search Properties
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 fade-in" style="transition-delay: 0.6s;">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">200+</div>
+                        <div class="text-blue-100">Properties Listed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">15+</div>
+                        <div class="text-blue-100">Years Experience</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">98%</div>
+                        <div class="text-blue-100">Client Satisfaction</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">24/7</div>
+                        <div class="text-blue-100">Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Properties -->
+    <section id="properties" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-deep-blue mb-4 fade-in">Featured Properties</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto fade-in" style="transition-delay: 0.1s;">
+                    Handpicked selection of premium properties in Maitama's most desirable neighborhoods
+                </p>
+            </div>
+            
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 fade-in" style="transition-delay: 0.2s;">
+                <button class="filter-btn px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition active" data-filter="all">
+                    All Properties
+                </button>
+                <button class="filter-btn px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition" data-filter="sale">
+                    For Sale
+                </button>
+                <button class="filter-btn px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition" data-filter="rent">
+                    For Rent
+                </button>
+                <button class="filter-btn px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition" data-filter="land">
+                    Land
+                </button>
+                <button class="filter-btn px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition" data-filter="commercial">
+                    Commercial
+                </button>
+            </div>
+            
+            <!-- Properties Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Property 1 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="sale" data-featured="true">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800" 
+                             alt="Modern Duplex in Maitama" class="w-full h-full object-cover">
+                        <div class="status-badge featured text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            🌟 Featured
+                        </div>
+                        <div class="status-badge for-sale text-white px-3 py-1 rounded-full text-sm font-semibold" 
+                             style="top: 50px;">
+                            For Sale
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">5-Bedroom Duplex</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦45M</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-bed mr-2"></i>
+                                <span>5 Beds</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-bath mr-2"></i>
+                                <span>4 Baths</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-ruler-combined mr-2"></i>
+                                <span>4500 sqft</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Modern duplex with swimming pool, generator house, and 24/7 security. Fully fitted kitchen, marble flooring.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="5-Bedroom Duplex in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-video mr-2"></i> Virtual Tour
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property 2 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="rent" style="transition-delay: 0.1s;">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800" 
+                             alt="3-Bedroom Apartment" class="w-full h-full object-cover">
+                        <div class="status-badge for-rent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            For Rent
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">3-Bedroom Apartment</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦800K/yr</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-bed mr-2"></i>
+                                <span>3 Beds</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-bath mr-2"></i>
+                                <span>2 Baths</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-ruler-combined mr-2"></i>
+                                <span>1800 sqft</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Spacious apartment with balcony, parking space, and water reservoir. Ideal for young families.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="3-Bedroom Apartment in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-images mr-2"></i> Gallery
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property 3 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="land" style="transition-delay: 0.2s;">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800" 
+                             alt="Plot of Land" class="w-full h-full object-cover">
+                        <div class="status-badge for-sale text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            For Sale
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">Half Plot of Land</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦7.5M</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-expand mr-2"></i>
+                                <span>600 sqm</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-road mr-2"></i>
+                                <span>Access Road</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-certificate mr-2"></i>
+                                <span>C of O</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Prime land with Certificate of Occupancy, surveyed, and ready for development. Good for residential building.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="Half Plot of Land in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-map-marked-alt mr-2"></i> View Map
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property 4 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="commercial">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800" 
+                             alt="Commercial Shop" class="w-full h-full object-cover">
+                        <div class="status-badge for-rent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            For Rent
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">Commercial Shop</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦300K/yr</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-store mr-2"></i>
+                                <span>2 Shops</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-ruler-combined mr-2"></i>
+                                <span>1200 sqft</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-warehouse mr-2"></i>
+                                <span>Storage</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Two commercial shops in Maitama Commercial Sector with storage room. High foot traffic, perfect for retail business.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="Commercial Shop in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-calendar-alt mr-2"></i> Schedule Visit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property 5 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="sale" style="transition-delay: 0.1s;">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800" 
+                             alt="Bungalow House" class="w-full h-full object-cover">
+                        <div class="status-badge for-sale text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            For Sale
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">4-Bedroom Bungalow</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦28M</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-bed mr-2"></i>
+                                <span>4 Beds</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-bath mr-2"></i>
+                                <span>3 Baths</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-tree mr-2"></i>
+                                <span>Garden</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Well-maintained bungalow with large compound, borehole, and servant quarters. Close to hospital and schools.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="4-Bedroom Bungalow in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-video mr-2"></i> Video Tour
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property 6 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden fade-in" data-type="rent" style="transition-delay: 0.2s;">
+                    <div class="relative h-64 overflow-hidden virtual-tour">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800" 
+                             alt="Office Space" class="w-full h-full object-cover">
+                        <div class="status-badge for-rent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            For Rent
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="bg-black/50 rounded-full w-20 h-20 flex items-center justify-center">
+                                <i class="fas fa-play text-white text-3xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-deep-blue">Office Space</h3>
+                            <div class="text-gold-600 font-bold text-xl">₦500K/yr</div>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            Maitama, Abuja
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-door-open mr-2"></i>
+                                <span>4 Offices</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-wifi mr-2"></i>
+                                <span>WiFi Ready</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-car mr-2"></i>
+                                <span>Parking</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Modern office space with reception area, conference room, and dedicated parking. Ideal for professionals.
+                        </p>
+                        <div class="flex justify-between">
+                            <button class="inquire-btn px-4 py-2 bg-deep-blue text-white rounded-lg hover:bg-blue-800 transition"
+                                    data-property="Office Space in Maitama">
+                                <i class="fas fa-info-circle mr-2"></i> Inquire
+                            </button>
+                            <button class="virtual-tour-btn px-4 py-2 border border-deep-blue text-deep-blue rounded-lg hover:bg-blue-50 transition">
+                                <i class="fas fa-video mr-2"></i> Virtual Tour
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 fade-in" style="transition-delay: 0.3s;">
+                <a href="#" class="border-2 border-deep-blue text-deep-blue hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition inline-flex items-center">
+                    <i class="fas fa-list mr-2"></i> View All Properties (200+)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-deep-blue mb-4 fade-in">Our Real Estate Services</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto fade-in" style="transition-delay: 0.1s;">
+                    Comprehensive property solutions for buyers, sellers, and investors in Abuja
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg fade-in">
+                    <div class="text-gold-600 text-4xl mb-4">🏡</div>
+                    <h3 class="text-xl font-bold text-deep-blue mb-3">Property Sales</h3>
+                    <p class="text-gray-600 mb-4">
+                        Expert assistance in buying and selling residential, commercial, and agricultural properties with transparent pricing.
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Property valuation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Negotiation assistance</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Document processing</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg fade-in" style="transition-delay: 0.1s;">
+                    <div class="text-blue-600 text-4xl mb-4">📝</div>
+                    <h3 class="text-xl font-bold text-deep-blue mb-3">Property Rentals</h3>
+                    <p class="text-gray-600 mb-4">
+                        Find your perfect rental home or commercial space with our verified listings and tenant screening services.
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Tenant verification</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Rental agreement drafting</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Property management</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg fade-in" style="transition-delay: 0.2s;">
+                    <div class="text-green-600 text-4xl mb-4">📋</div>
+                    <h3 class="text-xl font-bold text-deep-blue mb-3">Property Management</h3>
+                    <p class="text-gray-600 mb-4">
+                        Full-service management for property owners including maintenance, rent collection, and tenant relations.
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Rent collection</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Maintenance coordination</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Financial reporting</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Additional Services -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in">
+                    <div class="text-purple-600 text-2xl mb-3">🏢</div>
+                    <h4 class="font-bold text-deep-blue">Commercial Real Estate</h4>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in" style="transition-delay: 0.1s;">
+                    <div class="text-yellow-600 text-2xl mb-3">📄</div>
+                    <h4 class="font-bold text-deep-blue">Legal Documentation</h4>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in" style="transition-delay: 0.2s;">
+                    <div class="text-red-600 text-2xl mb-3">💰</div>
+                    <h4 class="font-bold text-deep-blue">Mortgage Assistance</h4>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in" style="transition-delay: 0.3s;">
+                    <div class="text-teal-600 text-2xl mb-3">📱</div>
+                    <h4 class="font-bold text-deep-blue">Virtual Tours</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mortgage Calculator -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="mortgage-calculator rounded-2xl p-8 text-white fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-4">Mortgage Calculator</h2>
+                        <p class="mb-8 opacity-90">
+                            Estimate your monthly mortgage payments for properties in Maitama. Our partners offer competitive rates.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block mb-2">Property Price (₦)</label>
+                                <input type="range" min="1000000" max="100000000" value="20000000" step="1000000" 
+                                       class="w-full" id="price-slider">
+                                <div class="flex justify-between mt-2">
+                                    <span>₦1M</span>
+                                    <span id="price-value" class="text-xl font-bold">₦20,000,000</span>
+                                    <span>₦100M</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">Down Payment (20%)</label>
+                                <input type="range" min="10" max="50" value="20" class="w-full" id="downpayment-slider">
+                                <div class="flex justify-between mt-2">
+                                    <span>10%</span>
+                                    <span id="downpayment-value" class="text-xl font-bold">20%</span>
+                                    <span>50%</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">Loan Term</label>
+                                <div class="flex space-x-4">
+                                    <button class="term-btn px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30" data-years="10">10 years</button>
+                                    <button class="term-btn px-4 py-2 bg-white/30 rounded-lg" data-years="15">15 years</button>
+                                    <button class="term-btn px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30" data-years="20">20 years</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/20 rounded-xl p-6">
+                        <h3 class="text-2xl font-bold mb-6">Payment Breakdown</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span>Property Price:</span>
+                                <span class="font-bold" id="display-price">₦20,000,000</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Down Payment:</span>
+                                <span class="font-bold" id="display-downpayment">₦4,000,000</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Loan Amount:</span>
+                                <span class="font-bold" id="display-loan">₦16,000,000</span>
+                            </div>
+                            <div class="border-t border-white/30 pt-4 mt-4">
+                                <div class="flex justify-between text-xl font-bold">
+                                    <span>Monthly Payment:</span>
+                                    <span id="monthly-payment" class="text-2xl">₦153,846</span>
+                                </div>
+                            </div>
+                            <div class="text-sm opacity-80 mt-4">
+                                *Estimate based on 15-year term at 12% interest rate
+                            </div>
+                        </div>
+                        
+                        <button class="w-full mt-8 bg-gold-600 hover:bg-gold-700 text-white py-3 rounded-lg font-semibold transition">
+                            <i class="fas fa-handshake mr-2"></i> Apply for Mortgage
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Agents -->
+    <section id="agents" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-deep-blue mb-4 fade-in">Meet Our Property Experts</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto fade-in" style="transition-delay: 0.1s;">
+                    Our team of licensed real estate professionals with deep local market knowledge
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Agent 1 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden fade-in">
+                    <div class="h-64 bg-gradient-to-br from-deep-blue to-blue-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-6xl text-white">👨‍💼</div>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold text-deep-blue">Alhaji Bello</h3>
+                        <p class="text-gold-600 font-medium mb-2">Senior Property Consultant</p>
+                        <p class="text-gray-600 text-sm mb-4">20+ years experience in Abuja real estate</p>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs">Residential</span>
+                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs">Land Sales</span>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            <span class="text-blue-600">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <span class="text-green-600">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">[PHONE: 0800-XXX-XXXX]</div>
+                    </div>
+                </div>
+                
+                <!-- Agent 2 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden fade-in" style="transition-delay: 0.1s;">
+                    <div class="h-64 bg-gradient-to-br from-gold-600 to-yellow-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-6xl text-white">👩‍💼</div>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold text-deep-blue">Hajara Ibrahim</h3>
+                        <p class="text-gold-600 font-medium mb-2">Rental Specialist</p>
+                        <p class="text-gray-600 text-sm mb-4">Expert in residential and commercial rentals</p>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs">Rentals</span>
+                            <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs">Apartments</span>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            <span class="text-blue-600">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <span class="text-green-600">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">[PHONE: 0800-XXX-XXXX]</div>
+                    </div>
+                </div>
+                
+                <!-- Agent 3 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden fade-in" style="transition-delay: 0.2s;">
+                    <div class="h-64 bg-gradient-to-br from-green-600 to-emerald-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-6xl text-white">👨‍💼</div>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold text-deep-blue">Malam Sani</h3>
+                        <p class="text-gold-600 font-medium mb-2">Commercial Real Estate</p>
+                        <p class="text-gray-600 text-sm mb-4">Specialist in commercial properties and investments</p>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">Commercial</span>
+                            <span class="bg-teal-100 text-teal-600 px-3 py-1 rounded-full text-xs">Investment</span>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            <span class="text-blue-600">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <span class="text-green-600">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">[PHONE: 0800-XXX-XXXX]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 fade-in" style="transition-delay: 0.3s;">
+                <button class="bg-blue hover:bg-blue-800 text-black hover:text-white px-8 py-3 rounded-lg font-semibold transition">
+                    <i class="fas fa-user-tie mr-2"></i> Become a Ra'ees Agent
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-deep-blue mb-4 fade-in">Client Success Stories</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto fade-in" style="transition-delay: 0.1s;">
+                    What our clients say about their experience with Ra'ees Properties
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 p-8 rounded-2xl fade-in">
+                    <div class="text-yellow-400 text-2xl mb-4">★★★★★</div>
+                    <p class="text-gray-600 italic mb-6">
+                        "Alhaji Bello helped me find the perfect land for my family house. The documentation process was smooth and transparent. Allah ya sa albarka."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-blue-600 font-bold">MM</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-deep-blue">Malam Musa</div>
+                            <div class="text-gray-500 text-sm">Land Buyer</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 p-8 rounded-2xl fade-in" style="transition-delay: 0.1s;">
+                    <div class="text-yellow-400 text-2xl mb-4">★★★★★</div>
+                    <p class="text-gray-600 italic mb-6">
+                        "Hajara found us a beautiful apartment within our budget. She even helped negotiate better terms with the landlord. Highly recommended!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-green-600 font-bold">AY</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-deep-blue">Aisha Yusuf</div>
+                            <div class="text-gray-500 text-sm">Tenant</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 p-8 rounded-2xl fade-in" style="transition-delay: 0.2s;">
+                    <div class="text-yellow-400 text-2xl mb-4">★★★★★</div>
+                    <p class="text-gray-600 italic mb-6">
+                        "Sold my father's house through Ra'ees Properties. They got me 15% more than I expected and handled all the legal work. Professional service!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-gold-600 font-bold">KS</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-deep-blue">Kabiru Suleiman</div>
+                            <div class="text-gray-500 text-sm">Property Seller</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Contact -->
+    <section id="about" class="py-20 bg-deep-blue text-black">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="fade-in">
+                    <h2 class="text-4xl font-bold mb-8">About Ra'ees Properties</h2>
+                    <p class="mb-6 opacity-90">
+                        Founded in 2009, Ra'ees Properties has become Abuja's most trusted real estate agency. 
+                        We specialize in residential, commercial, and land transactions across Abuja.
+                    </p>
+                    <p class="mb-8 opacity-90">
+                        Our mission is to make property transactions transparent, secure, and beneficial for all parties. 
+                        We combine traditional values with modern real estate practices.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-gold-400 mb-3">Our Values</h4>
+                            <ul class="space-y-2 opacity-90">
+                                <li class="flex items-center">
+                                    <i class="fas fa-shield-alt text-gold-400 mr-2"></i>
+                                    <span>Trust & Integrity</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-handshake text-gold-400 mr-2"></i>
+                                    <span>Client-First Approach</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-home text-gold-400 mr-2"></i>
+                                    <span>Local Expertise</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gold-400 mb-3">Areas We Cover</h4>
+                            <ul class="space-y-2 opacity-90">
+                                <li>• Maitama & Surrounding Districts</li>
+                                <li>• Central Abuja</li>
+                                <li>• Diplomatic Zone</li>
+                                <li>• Commercial Sectors</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in" style="transition-delay: 0.2s;">
+                    <div class="bg-white/10 rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold mb-6">Contact Us</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1">Office Address</h4>
+                                    <p class="opacity-90">No. 15, Maitama District<br>Abuja, Nigeria</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1">Contact Numbers</h4>
+                                    <p class="opacity-90">
+                                        <strong>Main:</strong> [PHONE: 0800-XXX-XXXX]<br>
+                                        <strong>WhatsApp:</strong> [WHATSAPP: 0800-XXX-XXXX]<br>
+                                        <strong>Email:</strong> [EMAIL: info@placeholder-domain.com]
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1">Office Hours</h4>
+                                    <p class="opacity-90">
+                                        Monday - Friday: 8:00 AM - 6:00 PM<br>
+                                        Saturday: 9:00 AM - 4:00 PM<br>
+                                        Sunday: By Appointment Only
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-bold mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-gold-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-home text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">Ra'ees Properties</div>
+                            <div class="text-gray-400 text-sm">Premium Real Estate Solutions</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Your trusted partner in property transactions in Maitama, Abuja since 2009.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#properties" class="text-gray-400 hover:text-white">Properties</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white">Services</a></li>
+                        <li><a href="#agents" class="text-gray-400 hover:text-white">Our Agents</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Property Types -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Property Types</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Houses for Sale</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Apartments for Rent</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Land & Plots</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Commercial Properties</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Short-term Rentals</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Get Property Alerts</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to receive new property listings</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your Email" 
+                               class="flex-1 px-4 py-2 rounded-l-lg bg-gray-800 border border-gray-700 focus:outline-none">
+                        <button class="bg-gold-600 hover:bg-gold-700 px-4 rounded-r-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="mt-6">
+                        <div class="text-gray-400">Need immediate assistance?</div>
+                        <span class="text-xl font-bold text-gold-400">[PHONE: 0800-XXX-XXXX]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 [--Company-xyz--]. All rights reserved. Licensed Real Estate Agency.</p>
+                <p class="mt-2 text-sm">Property listings are subject to availability. Prices are negotiable.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollAnimations();
+            initInquiryModal();
+            initMobileMenu();
+            initPropertyFiltering();
+            initMortgageCalculator();
+        });
+
+        // === SCROLL ANIMATIONS ===
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('appear');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
+
+        // === INQUIRY MODAL ===
+        function initInquiryModal() {
+            const modal = document.getElementById('inquiry-modal');
+            const closeBtn = document.getElementById('close-inquiry');
+            const inquireButtons = document.querySelectorAll('.inquire-btn');
+            const form = document.getElementById('inquiry-form');
+
+            // Open modal on inquire button click
+            inquireButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const propertyTitle = this.getAttribute('data-property');
+                    document.getElementById('modal-property-title').textContent = 
+                        `Inquire About: ${propertyTitle}`;
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // List property buttons
+            document.querySelectorAll('#list-property-btn, #list-property-mobile').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('modal-property-title').textContent = 
+                        "List Your Property with Us";
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Close modal
+            closeBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Inquiry Sent!';
+                submitBtn.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    form.reset();
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                    submitBtn.textContent = originalText;
+                    submitBtn.classList.remove('bg-green-600');
+                    
+                    // Show success message
+                    alert('Thank you! Our agent will contact you within 24 hours.');
+                }, 2000);
+            });
+        }
+
+        // === MOBILE MENU ===
+        function initMobileMenu() {
+            const toggleBtn = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            toggleBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Close menu when clicking links
+            mobileMenu.querySelectorAll('a, button').forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            });
+        }
+
+        // === PROPERTY FILTERING ===
+        function initPropertyFiltering() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const propertyCards = document.querySelectorAll('.property-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Filter properties
+                    propertyCards.forEach(card => {
+                        if (filterValue === 'all') {
+                            card.style.display = 'block';
+                        } else {
+                            const propertyType = card.getAttribute('data-type');
+                            if (propertyType === filterValue) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Virtual tour buttons
+            document.querySelectorAll('.virtual-tour-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Virtual tour feature would launch here in production.');
+                });
+            });
+        }
+
+        // === MORTGAGE CALCULATOR ===
+        function initMortgageCalculator() {
+            const priceSlider = document.getElementById('price-slider');
+            const downpaymentSlider = document.getElementById('downpayment-slider');
+            const termButtons = document.querySelectorAll('.term-btn');
+            const priceValue = document.getElementById('price-value');
+            const downpaymentValue = document.getElementById('downpayment-value');
+            const displayPrice = document.getElementById('display-price');
+            const displayDownpayment = document.getElementById('display-downpayment');
+            const displayLoan = document.getElementById('display-loan');
+            const monthlyPayment = document.getElementById('monthly-payment');
+            
+            let selectedTerm = 15; // Default term
+
+            // Update term buttons
+            termButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    termButtons.forEach(b => b.classList.remove('bg-white/30'));
+                    this.classList.add('bg-white/30');
+                    selectedTerm = parseInt(this.getAttribute('data-years'));
+                    calculateMortgage();
+                });
+            });
+
+            // Update price slider
+            priceSlider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                const formatted = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 0
+                }).format(value);
+                priceValue.textContent = formatted;
+                displayPrice.textContent = formatted;
+                calculateMortgage();
+            });
+
+            // Update downpayment slider
+            downpaymentSlider.addEventListener('input', function() {
+                const value = this.value + '%';
+                downpaymentValue.textContent = value;
+                calculateMortgage();
+            });
+
+            // Calculate mortgage
+            function calculateMortgage() {
+                const price = parseInt(priceSlider.value);
+                const downpaymentPercent = parseInt(downpaymentSlider.value);
+                const downpaymentAmount = price * (downpaymentPercent / 100);
+                const loanAmount = price - downpaymentAmount;
+                const interestRate = 0.12; // 12% annual
+                const monthlyInterest = interestRate / 12;
+                const numberOfPayments = selectedTerm * 12;
+                
+                // Calculate monthly payment using formula
+                const monthly = loanAmount * 
+                    (monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayments)) / 
+                    (Math.pow(1 + monthlyInterest, numberOfPayments) - 1);
+                
+                // Update display
+                displayDownpayment.textContent = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 0
+                }).format(downpaymentAmount);
+                
+                displayLoan.textContent = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 0
+                }).format(loanAmount);
+                
+                monthlyPayment.textContent = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 0
+                }).format(Math.round(monthly));
+            }
+
+            // Initial calculation
+            calculateMortgage();
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // WhatsApp button animation
+        setInterval(() => {
+            const whatsappBtn = document.querySelector('.pulse-animation');
+            whatsappBtn.classList.toggle('animate-pulse');
+        }, 3000);
+    </script>
+
+</body>
+</html>
